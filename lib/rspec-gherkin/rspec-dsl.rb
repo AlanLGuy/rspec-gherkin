@@ -38,8 +38,7 @@ class << self
             file_path: spec_location[0],
             location: "#{spec_location[0]}:#{spec_location[1]}"
         )
-        pending reason
-        raise "pending"
+        skip reason
       end
     end
   end
@@ -93,8 +92,7 @@ module RSpecGherkin
               full_description: "Scenario: #{name}",
               location: "#{spec_location[0]}:#{spec_location[1]}"
           )
-          pending reason
-          raise('pending')
+          skip reason
         end
       end
     end
