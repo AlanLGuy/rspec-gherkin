@@ -74,6 +74,31 @@ module RSpecGherkin
         end
       end
 
+
+      def scenario_with_test_cases(name = nil, new_metadata = {}, &block)
+        raise ArgumentError.new("requires a name") if name.nil?
+
+        matching_scenario = find_scenario(self.metadata[:current_feature], name)
+
+        if matching_scenario
+          if matching_scenario.tags.include?('updated')
+            pending_scenario(name, new_metadata, block.source_location,
+                             "Scenario has been marked as updated\n \t# Update specs for this scenario and remove the @updated tag\n \t# Feature file: '#{feature_path(block.source_location)}'"
+            )
+          else
+            describe("Scenario: #{name}", new_metadata.merge(:scenario_name => name), &block)
+          end
+        else
+          pending_scenario(name, new_metadata, block.source_location, "No such scenario in '#{feature_path(block.source_location)}'")
+        end
+      end
+
+      def test_case(name = nil, new_metadata = {}, &block)
+        raise ArgumentError.new("requires a name") if name.nil?
+        new_metadata[:test_case_name]= name
+        specify("Test_Case: #{name}", new_metadata, &block)
+      end
+
       private
 
       def find_scenario(feature, name)
