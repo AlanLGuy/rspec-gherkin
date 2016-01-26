@@ -1,4 +1,4 @@
-require "gherkin"
+require 'gherkin'
 
 module RSpecGherkin
   class Builder
@@ -75,7 +75,9 @@ module RSpecGherkin
       def build(feature_file)
         RSpecGherkin::Builder.new.tap do |builder|
           parser = Gherkin::Parser::Parser.new(builder, true)
-          parser.parse(File.read(feature_file), feature_file, 0)
+          parsed_feature = parser.parse(File.read(feature_file), feature_file, 0)
+          @features ||= []
+          @features << parsed_feature
         end
       end
     end
