@@ -7,7 +7,7 @@ class << self
     new_metadata[:feature_name]= name
 
     if matching_feature
-      if matching_feature.tags.include?('updated')
+      if matching_feature.tags.include?('@updated')
         pending_feature(name, new_metadata, block.source_location,
                         "Feature has been marked as updated\n \t# Update specs for this feature and remove the @updated tag\n \t# Feature file: '#{feature_path(block.source_location)}"
         )
@@ -58,14 +58,14 @@ module RSpecGherkin
         new_metadata[:scenario_name]= name
 
         if matching_scenario
-          if matching_scenario.tags.include?('updated')
+          if matching_scenario.tags.include?('@updated')
             pending_scenario(name, new_metadata, block.source_location,
                              "Scenario has been marked as updated\n \t# Update specs for this scenario and remove the @updated tag\n \t# Feature file: '#{feature_path(block.source_location)}'"
             )
-          elsif matching_scenario.arguments
-            specify "Scenario: #{name}", new_metadata do
-              instance_exec(*matching_scenario.arguments, &block)
-            end
+          # elsif matching_scenario.arguments
+          #   specify "Scenario: #{name}", new_metadata do
+          #     instance_exec(*matching_scenario.arguments, &block)
+          #   end
           else
             specify("Scenario: #{name}", new_metadata, &block)
           end
@@ -81,7 +81,7 @@ module RSpecGherkin
         matching_scenario = find_scenario(self.metadata[:current_feature], name)
 
         if matching_scenario
-          if matching_scenario.tags.include?('updated')
+          if matching_scenario.tags.include?('@updated')
             pending_scenario(name, new_metadata, block.source_location,
                              "Scenario has been marked as updated\n \t# Update specs for this scenario and remove the @updated tag\n \t# Feature file: '#{feature_path(block.source_location)}'"
             )
